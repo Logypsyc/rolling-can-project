@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-# cap = cv2.VideoCapture(r"rolling_can.mov")
-cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
+cap = cv2.VideoCapture(r"rolling_can.mov")
+# cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
 
 totalFrames = 0
 countedFrames = 0
@@ -30,11 +30,11 @@ while cap.isOpened():
 
             countedFrames += 1
 
-        cv2.putText(frame, 'total frames: ' + str(totalFrames), (50, 50), font, 1, (0, 255, 255), 2, cv2.LINE_4)
-        cv2.putText(frame, 'counted frames: ' + str(countedFrames), (50, 25), font, 1, (0, 255, 255), 2, cv2.LINE_4)
+        cv2.putText(frame, 'total frames: ' + str(totalFrames), (50, 50), font, 1, (0, 255, 0), 2, cv2.LINE_4)
+        cv2.putText(frame, 'counted frames: ' + str(countedFrames), (50, 25), font, 1, (0, 255, 0), 2, cv2.LINE_4)
 
         cv2.imshow("Detected Circles", frame)
-        k = cv2.waitKey(1) & 0xff
+        k = cv2.waitKey(33) & 0xff
     else:
         break
 
