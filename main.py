@@ -8,6 +8,11 @@ totalFrames = 0
 countedFrames = 0
 font = cv2.FONT_HERSHEY_SIMPLEX
 
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+result = cv2.VideoWriter('output.MOV', fourcc, 30, (frame_width, frame_height))       
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -33,12 +38,15 @@ while cap.isOpened():
         cv2.putText(frame, 'total frames: ' + str(totalFrames), (50, 50), font, 1, (0, 255, 0), 2, cv2.LINE_4)
         cv2.putText(frame, 'counted frames: ' + str(countedFrames), (50, 25), font, 1, (0, 255, 0), 2, cv2.LINE_4)
 
+        result.write(frame)
         cv2.imshow("Detected Circles", frame)
-        k = cv2.waitKey(33) & 0xff
+
+        k = cv2.waitKey(5) & 0xff
     else:
         break
 
 cv2.waitKey(0)
 
-cv2.destroyAllWindows()
 cap.release()
+result.release()
+cv2.destroyAllWindows()
