@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(r"rolling_can.mov")
-# cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
+# cap = cv2.VideoCapture(r"rolling_can.mov")
+cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
 
 totalFrames = 0
 countedFrames = 0
@@ -20,8 +20,8 @@ while cap.isOpened():
     if ret:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        gray_blurred = cv2.GaussianBlur(gray, (11, 11), 0)
-        detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=1, maxRadius=40)
+        gray_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+        detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, 100000000000000, param1=80, param2=10, minRadius=20, maxRadius=24)
 
         if detected_circles is not None:
 
