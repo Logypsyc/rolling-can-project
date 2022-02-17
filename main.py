@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-# cap = cv2.VideoCapture(r"rolling_can.mov")
-cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
+cap = cv2.VideoCapture(r"rolling_can.mov")
+# cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
 
 totalFrames = 0
 countedFrames = 0
@@ -12,7 +12,7 @@ frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-result = cv2.VideoWriter('output.MOV', fourcc, 30, (frame_width, frame_height))       
+result = cv2.VideoWriter('output.MOV', fourcc, 30, (frame_width, frame_height))
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -41,7 +41,7 @@ while cap.isOpened():
         result.write(frame)
         cv2.imshow("Detected Circles", frame)
 
-        k = cv2.waitKey(5) & 0xff
+        k = cv2.waitKey(33) & 0xff
     else:
         break
 
