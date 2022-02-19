@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-# cap = cv2.VideoCapture(r"rolling_can.mov")
 cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
 
 totalFrames = 0
