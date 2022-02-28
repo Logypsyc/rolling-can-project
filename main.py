@@ -1,51 +1,49 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
+img = cv2.imread("/Users/local/PycharmProjects/findcircles_kennethlin/test_l3.jpg")
+# img = cv2.imread(r"C:\Users\klin1\Documents\test_l3.jpg")
+width, height = 1500, 1300
+pts1 = np.float32([[853, 158], [1892, 162], [581, 705], [1686, 734]])
+#                   top left, top right, bottom left, bottom right
+pts2 = np.float32([[0, 0], [width, 0], [0, height], [width, height]])
+matrix = cv2.getPerspectiveTransform(pts1, pts2)
+imgOutput = cv2.warpPerspective(img, matrix, (width, height))
 
-totalFrames = 0
-countedFrames = 0
-font = cv2.FONT_HERSHEY_SIMPLEX
-
-frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
-
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-result = cv2.VideoWriter('output.MOV', fourcc, 30, (frame_width, frame_height))
-
-while cap.isOpened():
-    ret, frame = cap.read()
-    totalFrames += 1
-    if ret:
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        gray_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-        detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, 100000000000000, param1=80, param2=10, minRadius=20, maxRadius=24)
-
-        if detected_circles is not None:
-
-            detected_circles = np.uint16(np.around(detected_circles))
-
-            for pt in detected_circles[0, :]:
-                a, b, r = pt[0], pt[1], pt[2]
-
-                cv2.circle(frame, (a, b), r, (0, 255, 0), 2)
-                cv2.circle(frame, (a, b), 1, (0, 0, 255), 3)
-
-            countedFrames += 1
-
-        cv2.putText(frame, 'total frames: ' + str(totalFrames), (50, 50), font, 1, (0, 255, 0), 2, cv2.LINE_4)
-        cv2.putText(frame, 'counted frames: ' + str(countedFrames), (50, 25), font, 1, (0, 255, 0), 2, cv2.LINE_4)
-
-        result.write(frame)
-        cv2.imshow("Detected Circles", frame)
-
-        k = cv2.waitKey(33) & 0xff
-    else:
-        break
-
+cv2.imshow("output image", imgOutput)
 cv2.waitKey(0)
 
-cap.release()
-result.release()
-cv2.destroyAllWindows()
+
+# function to display the coordinates of
+# of the points clicked on the image
+def click_event(event, x, y, flags, params):
+    # checking for left mouse clicks
+    if event == cv2.EVENT_LBUTTONDOWN:
+        # displaying the coordinates
+        # on the Shell
+        print(x, ' ', y)
+
+        # displaying the coordinates
+        # on the image window
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(image, str(x) + ',' + str(y), (x, y), font, 1, (0, 0, 255), 2)
+        cv2.imshow('image', image)
+
+
+# driver function
+if __name__ == "__main__":
+    # reading the image
+    image = cv2.imread("/Users/local/PycharmProjects/findcircles_kennethlin/test_l3.jpg")
+
+    # displaying the image
+    cv2.imshow('image', image)
+
+    # setting mouse handler for the image
+    # and calling the click_event() function
+    cv2.setMouseCallback('image', click_event)
+
+    # wait for a key to be pressed to exit
+    cv2.waitKey(0)
+
+    # close the window
+    cv2.destroyAllWindows()
