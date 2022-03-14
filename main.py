@@ -1,51 +1,35 @@
-import cv2
+import cv2 as cv
 import numpy as np
+import math
 
-cap = cv2.VideoCapture("/Users/local/PycharmProjects/rollingcan_kennethlin/rolling_can.mov")
+src = cv.imread(r"IMG_9905.jpeg", cv.IMREAD_GRAYSCALE)
+dst = cv.Canny(src, 50, 200, None, 3)
 
-totalFrames = 0
-countedFrames = 0
-font = cv2.FONT_HERSHEY_SIMPLEX
+# Copy edges to the images that will display the results in BGR
+cdstP = cv.cvtColor(src, cv.COLOR_GRAY2BGR)
+gray_blurred = cv.blur(cdstP, (5, 5))
+linesP = cv.HoughLinesP(dst, 1, np.pi / 180, 5, None, 0, 10000)
 
-frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
+if linesP is not None:
+    for i in range(0, len(linesP)):
+        l = linesP[i][0]
+        cv.line(gray_blurred, (l[0], l[1]), (l[2], l[3]), (0, 255, 0), 3, cv.LINE_AA)
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-result = cv2.VideoWriter('output.MOV', fourcc, 30, (frame_width, frame_height))
+x1 = linesP[0][0][0]
+y1 = linesP[0][0][1]
+x2 = linesP[0][0][2]
+y2 = linesP[0][0][3]
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    totalFrames += 1
-    if ret:
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+x3 = linesP[1][0][0]
+y3 = linesP[1][0][1]
+x4 = linesP[1][0][2]
+y4 = linesP[1][0][3]
 
-        gray_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-        detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, 100000000000000, param1=80, param2=10, minRadius=20, maxRadius=24)
+points = [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
+arrowedImage = cv.arrowedLine(gray_blurred, points[0], points[1], (0, 0, 255), 9)
+arrowedImage = cv.arrowedLine(gray_blurred, points[3], points[2], (0, 0, 255), 9)
 
-        if detected_circles is not None:
-
-            detected_circles = np.uint16(np.around(detected_circles))
-
-            for pt in detected_circles[0, :]:
-                a, b, r = pt[0], pt[1], pt[2]
-
-                cv2.circle(frame, (a, b), r, (0, 255, 0), 2)
-                cv2.circle(frame, (a, b), 1, (0, 0, 255), 3)
-
-            countedFrames += 1
-
-        cv2.putText(frame, 'total frames: ' + str(totalFrames), (50, 50), font, 1, (0, 255, 0), 2, cv2.LINE_4)
-        cv2.putText(frame, 'counted frames: ' + str(countedFrames), (50, 25), font, 1, (0, 255, 0), 2, cv2.LINE_4)
-
-        result.write(frame)
-        cv2.imshow("Detected Circles", frame)
-
-        k = cv2.waitKey(33) & 0xff
-    else:
-        break
-
-cv2.waitKey(0)
-
-cap.release()
-result.release()
-cv2.destroyAllWindows()
+bottomPointX = int((x1 + x2)/2)
+bottomPointY = int((y1 + y2)/2)
+cv.imshow("Detected Lines - probabilistic hough transform", arrowedImage)
+cv.waitKey()
