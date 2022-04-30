@@ -1,0 +1,2 @@
+Given a 15-second video of a can rolling across a table, a program must detect the edge and center of the can as it rolls. The program uses functions from openCV and return the modified video that contains the center and edge, as well as the number of frames where the can is detected and the total number of frames in the video. While the program is running, the modified video will be displayed as the algorithm detects the circles.
+
